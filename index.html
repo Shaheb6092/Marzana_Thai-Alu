@@ -36,7 +36,38 @@
     <meta name="twitter:url" content="https://yourdomain.com/">
     <meta name="twitter:image" content="https://yourdomain.com/images/logo.jpg">
 
-    
+    <script>
+        const seoOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+        const seoPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+        const seoCanonical = seoOrigin ? `${seoOrigin}${seoPath}` : '/';
+        const seoImage = seoOrigin ? `${seoOrigin}/images/logo.jpg` : 'images/logo.jpg';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canonicalLink = document.querySelector('link[rel="canonical"]');
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            const twitterUrl = document.querySelector('meta[name="twitter:url"]');
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+
+            if (canonicalLink) canonicalLink.href = seoCanonical;
+            if (ogUrl) ogUrl.content = seoCanonical;
+            if (twitterUrl) twitterUrl.content = seoCanonical;
+            if (ogImage) ogImage.content = seoImage;
+            if (twitterImage) twitterImage.content = seoImage;
+
+            const ldScript = document.querySelector('script[type="application/ld+json"]');
+            if (ldScript) {
+                try {
+                    const ldData = JSON.parse(ldScript.textContent);
+                    ldData.image = seoImage;
+                    ldData.logo = seoImage;
+                    ldScript.textContent = JSON.stringify(ldData);
+                } catch (error) {
+                    console.warn('Unable to update SEO schema image URL:', error);
+                }
+            }
+        });
+    </script>
 
     <!-- Schema.org Structured Data for Local Business SEO -->
     <script type="application/ld+json">
