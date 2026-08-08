@@ -83,6 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
+            // Also open booking modal for any anchor that targets #booking (footer/other links)
+            const bookingAnchors = document.querySelectorAll('a[href="#booking"]');
+            if (bookingAnchors.length && bookingModal) {
+                bookingAnchors.forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        bookingModal.classList.remove('hidden');
+                        bookingModal.classList.add('flex');
+                    });
+                });
+            }
+
             if (bookingModal) {
                 bookingModal.addEventListener('click', (event) => {
                     if (event.target === bookingModal) {
